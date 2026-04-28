@@ -1,0 +1,4 @@
+repository "first_game/x2_fighters@1375356981854@cloud"
+  path "/"
+    br "/main"
+    co "/main"
