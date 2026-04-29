@@ -2,6 +2,7 @@ using UnityEngine;
 using Unity.Netcode.Components;
 using Unity.Netcode;
 using System.Collections;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     private float dashingPower = 24f;
     private float dashingTime = 0.2f;
     private float dashingCooldown = 1f;
+    private bool hasDashed;
 
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
@@ -31,9 +33,15 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         Move();
+
+        if (IsGrounded())
+        {
+            jumpsRemaining = maxJumps;
+            hasDashed = false;
+        }
     }
 
-    private void Move()
+    public void Move()
     {
         if (isDashing)
         {
@@ -42,36 +50,35 @@ public class PlayerMovement : MonoBehaviour
 
         horizontal = Input.GetAxisRaw("Horizontal");
 
-        if (Input.GetButtonDown("Jump") && jumpsRemaining > 0)
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpingPower);
-            jumpsRemaining--;
-        }
-
-        if (Input.GetButtonUp("Jump") && rb.linearVelocity.y > 0f)
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f);
-        }
-
-        if (IsGrounded())
-        {
-            jumpsRemaining = maxJumps;
-        }
-
-        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
-        {
-            StartCoroutine(Dash());
-        }
-
         Flip();
     }
-    private void FixedUpdate()
+
+    public void OnJump(InputAction.CallbackContext context)
     {
-        if (isDashing)
+        // PRESS
+        if (context.started)
         {
-            return;
+            if (jumpsRemaining > 0)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpingPower);
+                jumpsRemaining--;
+            }
         }
 
+        // RELEASE
+        if (context.canceled)
+        {
+            if (rb.linearVelocity.y > 0f)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f);
+            }
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (isDashing) return;
+        
         rb.linearVelocity = new Vector2(horizontal * speed, rb.linearVelocity.y);
     }
 
@@ -91,19 +98,28 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+
+    public void OnDash(InputAction.CallbackContext context)
+    {
+        if (context.started && canDash && !hasDashed)
+        {
+            StartCoroutine(Dash());
+        }
+    }
+
     private IEnumerator Dash()
     {
-        canDash = false;
         isDashing = true;
+        hasDashed = true;
         float originalGravity = rb.gravityScale;
         rb.gravityScale = 0f;
-        rb.linearVelocity = new Vector2(transform.localScale.x * dashingPower, 0f);
+        float direction = isFacingRight ? 1f : -1f;
+        rb.linearVelocity = Vector2.zero;
+        rb.linearVelocity = new Vector2(direction * dashingPower, 0f);
         tr.emitting = true;
         yield return new WaitForSeconds(dashingTime);
         tr.emitting = false;
         rb.gravityScale = originalGravity;
         isDashing = false;
-        yield return new WaitForSeconds(dashingCooldown);
-        canDash = true;
     }
 }
