@@ -7,7 +7,13 @@ public class TimerScript : MonoBehaviour
     public TMP_Text Timer;
     public float remainingTime;
 
-    // Update is called once per frame
+    [SerializeField] private GameObject TimeUp;
+
+    void Start()
+    {
+        if (TimeUp != null)
+            TimeUp.SetActive(false);
+    }
     void Update()
     {
         remainingTime -= Time.deltaTime;
@@ -20,6 +26,10 @@ public class TimerScript : MonoBehaviour
         {
             remainingTime = 0;
             Timer.text = Mathf.CeilToInt(remainingTime).ToString();
+            if (TimeUp != null)
+                TimeUp.SetActive(true);
+
+            Time.timeScale = 0f;
         }
         
         if (remainingTime < 9f)
