@@ -30,7 +30,7 @@ public class PlayerHealth : MonoBehaviour
 
         healthBar.SetHealth(currentHealth);
 
-        if (currentHealth < 0)
+        if (currentHealth <= 0)
         {
             gameOver();
         }
