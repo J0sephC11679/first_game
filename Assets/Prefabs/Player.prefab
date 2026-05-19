@@ -130,6 +130,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   tr: {fileID: 7292320598721161494}
+  crouchHeight: 0
+  col: {fileID: 0}
+  sr: {fileID: 0}
+  idleSprite: {fileID: 0}
+  crouchSprite: {fileID: 0}
+  jumpSprite: {fileID: 0}
+  playerHealth: {fileID: 0}
 --- !u!114 &6125382423901944097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,6 +153,7 @@ MonoBehaviour:
   currentHealth: 0
   healthBar: {fileID: 0}
   GameOver: {fileID: 0}
+  isDead: 0
 --- !u!96 &7292320598721161494
 TrailRenderer:
   serializedVersion: 4
@@ -400,8 +408,8 @@ Transform:
   m_GameObject: {fileID: 8012881847871102022}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.01, y: -0.08, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.4687, y: -0.6115, z: 0}
+  m_LocalScale: {x: 1.3237374, y: 1.3237374, z: 1.3237374}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6052796349241921298}
@@ -455,7 +463,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -3415312158800669560, guid: 38af3a533c17d7a4fa34a399bd6ab307, type: 3}
+  m_Sprite: {fileID: -8324419552677186454, guid: 8e3ce0a75f863bc4891385eb887d2335, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

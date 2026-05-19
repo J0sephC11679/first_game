@@ -25,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 originalSize;
 
     private bool lockFlip;
+    private bool wasGrounded;
 
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
@@ -36,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private SpriteRenderer sr;
     [SerializeField] private Sprite idleSprite;
     [SerializeField] private Sprite crouchSprite;
+    [SerializeField] private Sprite jumpSprite;
     [SerializeField] private PlayerHealth playerHealth;
 
     void Start()
@@ -50,12 +52,21 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (IsGrounded())
+        bool grounded = IsGrounded();
+
+        if (grounded)
         {
             jumpsRemaining = maxJumps;
             hasDashed = false;
             lockFlip = false;
+
+            if (!wasGrounded && !isCrouching)
+            {
+                sr.sprite = idleSprite;
+            }
         }
+
+        wasGrounded = grounded;
 
         if (!isDashing && rb.gravityScale == 0f)
         {
@@ -75,7 +86,6 @@ public class PlayerMovement : MonoBehaviour
 
         if (isDashing) return;
 
-        Debug.Log($"moveInput: {moveInput}, isCrouching: {isCrouching}");
         float targetVelocityX = moveInput.x * speed;
 
         if (isCrouching)
@@ -134,6 +144,8 @@ public class PlayerMovement : MonoBehaviour
                 jumpsRemaining--;
 
                 lockFlip = true;
+
+                sr.sprite = jumpSprite;
             }
         }
 
