@@ -1935,7 +1935,7 @@ Transform:
   m_GameObject: {fileID: 1242933105}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.48, y: -8.66, z: 0}
+  m_LocalPosition: {x: 5.64, y: -6.53, z: 0}
   m_LocalScale: {x: 4.890323, y: 4.580826, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2085,6 +2085,17 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1428440295 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6125382423901944097, guid: d0e5abd8e9e81044b8ff4180214518a4, type: 3}
+  m_PrefabInstance: {fileID: 7166976091276109077}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1428440277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 244b7f5e14624c24187374d72984d4d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1 &1523446548
 GameObject:
   m_ObjectHideFlags: 0
@@ -2672,9 +2683,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4667098522453914950, guid: 7a3db33e109b6c5419c31043c03603cc, type: 3}
     - target: {fileID: 2347755360256704341, guid: d0e5abd8e9e81044b8ff4180214518a4, type: 3}
+      propertyPath: jumpSprite
+      value: 
+      objectReference: {fileID: -8324419552677186454, guid: 8e3ce0a75f863bc4891385eb887d2335, type: 3}
+    - target: {fileID: 2347755360256704341, guid: d0e5abd8e9e81044b8ff4180214518a4, type: 3}
       propertyPath: crouchSprite
       value: 
       objectReference: {fileID: 1992328751424568278, guid: c265603fba041074d9f8a4b37d174694, type: 3}
+    - target: {fileID: 2347755360256704341, guid: d0e5abd8e9e81044b8ff4180214518a4, type: 3}
+      propertyPath: playerHealth
+      value: 
+      objectReference: {fileID: 1428440295}
     - target: {fileID: 3013892810765804267, guid: d0e5abd8e9e81044b8ff4180214518a4, type: 3}
       propertyPath: m_Sprite
       value: 

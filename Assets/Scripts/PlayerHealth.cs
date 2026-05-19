@@ -10,7 +10,7 @@ public class PlayerHealth : MonoBehaviour
 
     [SerializeField] private GameObject GameOver;
 
-    private bool isDead = false;
+    public bool isDead = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

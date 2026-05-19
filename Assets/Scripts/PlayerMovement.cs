@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
-using UnityEditor.Tilemaps;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -25,6 +24,8 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 originalOffset;
     private Vector2 originalSize;
 
+    private bool lockFlip;
+
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
@@ -35,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private SpriteRenderer sr;
     [SerializeField] private Sprite idleSprite;
     [SerializeField] private Sprite crouchSprite;
+    [SerializeField] private PlayerHealth playerHealth;
 
     void Start()
     {
@@ -52,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
         {
             jumpsRemaining = maxJumps;
             hasDashed = false;
-            return;
+            lockFlip = false;
         }
 
         if (!isDashing && rb.gravityScale == 0f)
@@ -63,11 +65,40 @@ public class PlayerMovement : MonoBehaviour
         Flip();
     }
 
+    private void FixedUpdate()
+    {
+        if (!CanAct())
+        {
+            rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
+            return;
+        }
+
+        if (isDashing) return;
+
+        Debug.Log($"moveInput: {moveInput}, isCrouching: {isCrouching}");
+        float targetVelocityX = moveInput.x * speed;
+
+        if (isCrouching)
+        {
+            targetVelocityX = 0f;
+        }
+
+        rb.linearVelocity = new Vector2(targetVelocityX, rb.linearVelocity.y);
+    }
+
+    private bool CanAct()
+    {
+        return !playerHealth.isDead;
+    }
 
     public void OnMove(InputAction.CallbackContext context)
     {
-
         moveInput = context.ReadValue<Vector2>();
+
+        if (!CanAct()) return;
+
+        if (Mathf.Abs(moveInput.x) < 0.2f)
+            moveInput.x = 0;
 
         if (context.started)
         {
@@ -93,13 +124,16 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        // PRESS
+        if (!CanAct()) return;
+
         if (context.started)
         {
             if (jumpsRemaining > 0)
             {
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpingPower);
                 jumpsRemaining--;
+
+                lockFlip = true;
             }
         }
 
@@ -111,19 +145,7 @@ public class PlayerMovement : MonoBehaviour
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f);
             }
         }
-    }
 
-    private void FixedUpdate()
-    {
-        if (isDashing) return;
-        
-        rb.linearVelocity = new Vector2(moveInput.x * speed, rb.linearVelocity.y);
-
-        if (isCrouching)
-        {
-            rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
-            return;
-        }
     }
 
     private bool IsGrounded()
@@ -133,7 +155,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Flip()
     {
-        if (IsGrounded()) return;
+        if (lockFlip) return;
 
         if (isFacingRight && moveInput.x < 0f || !isFacingRight && moveInput.x > 0f)
         {
@@ -164,6 +186,9 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnCrouch(InputAction.CallbackContext context)
     {
+        if (!CanAct()) return;
+        if (playerHealth.isDead) return;
+
         if (context.started)
         {
             StartCrouch();
@@ -189,7 +214,7 @@ public class PlayerMovement : MonoBehaviour
         col.offset = new Vector2(originalOffset.x, originalOffset.y - offsetDifference);
     }
 
-    void StopCrouch()
+    public void StopCrouch()
     {
         isCrouching = false;
 
