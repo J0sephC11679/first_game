@@ -2,10 +2,12 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CharacterSelectManager : MonoBehaviour
+public class CharacterSelectManager2 : MonoBehaviour
 {
     public Sprite[] characters; // Array that holds the character sprites
     public Image previewImage; // UI Image component to display the selected character
+
+    public int testNumber; // for debugging purposes, can be removed later
 
     private int currentIndex = 0; // Index to keep track of the currently selected character
 
@@ -36,7 +38,10 @@ public class CharacterSelectManager : MonoBehaviour
 
     void UpdateCharacter()
     {
-        previewImage.sprite = characters[currentIndex]; // Sets the preview image to the currently selected character sprite
+        if (characters.Length > 0 && previewImage != null) // Checks if there are characters in the array and if the preview image is assigned
+        {
+            previewImage.sprite = characters[currentIndex]; // Sets the preview image to the currently selected character sprite
+        }
     }
 
     public void StartGame()
